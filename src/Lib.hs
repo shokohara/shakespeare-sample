@@ -16,6 +16,7 @@ import Data.Aeson.Casing (aesonPrefix, snakeCase)
 import GHC.Generics (Generic)
 import Text.Shakespeare.Text
 import qualified Data.Text.Lazy as TL
+--import Language.Haskell.TH
 
 data Element = Element { version, url, rspecVersion :: String } deriving (Show, Eq, Generic)
 
@@ -31,10 +32,21 @@ parseYaml x = Y.decode x :: Maybe [Element]
 toElement :: String -> IO (Maybe [Element])
 toElement x = B.readFile x >>= return . parseYaml
 
+-- hoge :: QuasiQuoter
+-- hoge = QuasiQuoter {
+--   quoteExp = liftE . stringL
+-- }
+
+f :: Builder -> T.Text
+f x = TL.toStrict . Data.Text.Lazy.Builder.toLazyText . toText $ x
+
 dockerfile :: Element -> T.Text
 dockerfile e = do
 --  let x = version e
 --  let rubyVersion2 = "2.3" :: String
 --  let rspecVersion = "3.4.0" :: String
---  (TL.toStrict . Data.Text.Lazy.Builder.toLazyText . toText) $(textFile "Dockerfile.template")
-  Data.Text.Lazy.Builder.toLazyText . toText $(textFile "Dockerfile.template")
+  let x = $(textFile "Dockerfile.template") e :: Builder
+  f x
+--  T.pack ""
+--  let a = textFile "Dockerfile.template"
+--  T.pack . show $ [hoge|a|]

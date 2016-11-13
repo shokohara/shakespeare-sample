@@ -25,7 +25,6 @@ library
                      , yaml
                      , here
                      , shakespeare
-                     , template-haskell
 
 executable abcde-exe
   hs-source-dirs:      app

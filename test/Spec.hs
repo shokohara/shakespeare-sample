@@ -28,7 +28,7 @@ main = hspec $ do
   describe "parse yaml" $ it "" $
     parseYaml (B8.pack "") `shouldBe` (Nothing :: Maybe [Element])
   describe "write Dockerfile" $ it "" $
-    T.writeFile "Dockerfile" $ dockerfile element231
+    T.writeFile "Dockerfile" $ renderDockerfile element231
   describe "toElement" $ it "" $
     toElement "ruby.yml" >>= (`shouldBe` Just [element230, element231])
 
